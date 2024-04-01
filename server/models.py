@@ -14,7 +14,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     payment = db.Column(db.String(35))
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                           onupdate=db.func.current_timestamp())
 
     
     def __repr__(self):
@@ -28,31 +29,33 @@ class Review(db.Model):
    rating =  db.Column (db.Integer, unique=True)
 
    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-   updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+   updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                          onupdate=db.func.current_timestamp())
     #relationships
    
 
 # Product Model
 class Product(db.Model):
-    __tablename__ = "products"
+    __tablename__ = "product_inventory"
     id = db.Column(db.Integer, primary_key=True)
     main_category = db.Column(db.String(30))
-    title = db.Column(db.Float)
+    title = db.Column(db.String)
     avg_rating = db.Column(db.Integer)
-    features = db.Column(db.String(300))
-    description = db.Column(db.String(300))
+    features = db.Column(db.Text)
+    description = db.Column(db.Text)
     store = db.Column(db.String(30))
     price = db.Column(db.Float)
     images = db.Column(db.String(100))
     videos = db.Column (db.String(100))
     categories = db.Column(db.String(100))
-    details = db.Column(db.String(100))
+    details = db.Column(db.Text)
     parent_asin = db.Column(db.String(20))
     bought_together = db.Column(db.String(20))
     quantity = db.Column(db.Integer)
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                           onupdate=db.func.current_timestamp())
 
     # relationships 
 
@@ -61,13 +64,14 @@ class Product(db.Model):
 class Transaction(db.Model):
     __tablename__ = "transactions"
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Columnn(db.Integer)
+    quantity = db.Column(db.Integer)
     price =  db.Column(db.Integer)
     date = db.Column(db.Date, nullable=False)
     payment = db.Column(db.String(25))
 
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                           onupdate=db.func.current_timestamp())
 
     # relationships 
 
