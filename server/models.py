@@ -1,9 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from config import db
 from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
 from flask_login import UserMixin
-from config import app
-db = SQLAlchemy()
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -87,4 +85,3 @@ transaction_product_association = db.Table('transaction_product_association',
     db.Column('transaction_id', db.Integer, db.ForeignKey('transactions.id')),
     db.Column('product_id', db.Integer, db.ForeignKey('product_inventory.id'))
 )
-
