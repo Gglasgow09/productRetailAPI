@@ -1,25 +1,24 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
+from flask_login import UserMixin
+from config import app
+db = SQLAlchemy()
 
-db= SQLAlchemy()
-#User Model
-class User(db.Model, SerializerMixin):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     firstName =  db.Column(db.String(25), nullable=False)
     lastName = db.Column(db.String(25), nullable=False)
     password = db.Column(db.String(35), unique=True, nullable=False)
-    state = db.Column(db.String(15))
-    zipcode = db.Column(db.Integer)
-    phone = db.Column(db.String(20))
+    state = db.Column(db.String(15), nullable=False)
+    zipcode = db.Column(db.Integer, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    payment = db.Column(db.String(35))
+    payment = db.Column(db.String(35), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
                            onupdate=db.func.current_timestamp())
-
-    
     def __repr__(self):
         return f"User('{self.firstName}', '{self.lastName}', {self.email}')"
     # relationships
@@ -30,7 +29,7 @@ class User(db.Model, SerializerMixin):
 class Review(db.Model, SerializerMixin):
    __tablename__ = "reviews"
    id = db.Column(db.Integer, primary_key=True)
-   rating =  db.Column (db.Integer, unique=True)
+   rating =  db.Column (db.Integer, unique=True, nullable=False)
    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
                           onupdate=db.func.current_timestamp())
@@ -44,20 +43,20 @@ class Review(db.Model, SerializerMixin):
 class Product(db.Model, SerializerMixin):
     __tablename__ = "product_inventory"
     id = db.Column(db.Integer, primary_key=True)
-    main_category = db.Column(db.String(30))
-    title = db.Column(db.String)
-    avg_rating = db.Column(db.Integer)
-    features = db.Column(db.Text)
-    description = db.Column(db.Text)
-    store = db.Column(db.String(30))
-    price = db.Column(db.Float)
-    images = db.Column(db.String(100))
-    videos = db.Column (db.String(100))
-    categories = db.Column(db.String(100))
-    details = db.Column(db.Text)
-    parent_asin = db.Column(db.String(20))
-    bought_together = db.Column(db.String(20))
-    quantity = db.Column(db.Integer)
+    main_category = db.Column(db.String(30),nullable=False)
+    title = db.Column(db.String,nullable=False)
+    avg_rating = db.Column(db.Integer,nullable=False)
+    features = db.Column(db.Text,nullable=False)
+    description = db.Column(db.Text,nullable=False)
+    store = db.Column(db.String(30),nullable=False)
+    price = db.Column(db.Float,nullable=False)
+    images = db.Column(db.String(100),nullable=False)
+    videos = db.Column (db.String(100),nullable=False)
+    categories = db.Column(db.String(100),nullable=False)
+    details = db.Column(db.Text,nullable=False)
+    parent_asin = db.Column(db.String(20),nullable=False)
+    bought_together = db.Column(db.String(20),nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
                            onupdate=db.func.current_timestamp())
@@ -71,10 +70,10 @@ class Product(db.Model, SerializerMixin):
 class Transaction(db.Model, SerializerMixin):
     __tablename__ = "transactions"
     id = db.Column(db.Integer, primary_key=True)
-    quantity = db.Column(db.Integer)
-    price =  db.Column(db.Integer)
+    quantity = db.Column(db.Integer, nullable=False)
+    price =  db.Column(db.Integer,nullable=False)
     date = db.Column(db.Date, nullable=False)
-    payment = db.Column(db.String(25))
+    payment = db.Column(db.String(25),nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
                            onupdate=db.func.current_timestamp())
@@ -88,3 +87,4 @@ transaction_product_association = db.Table('transaction_product_association',
     db.Column('transaction_id', db.Integer, db.ForeignKey('transactions.id')),
     db.Column('product_id', db.Integer, db.ForeignKey('product_inventory.id'))
 )
+

@@ -1,45 +1,12 @@
-from flask import Flask
-from models import db, User, Review, Product, Transaction
-from data_import import import_json_data
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-db.init_app(app)
-
-@app.route('/import_data')
-def import_data():
-    json_file = 'Clothing_Data_Nine_Thousand_entries.json'
-    table_name = 'clothing_data'
-    try:
-        import_json_data(json_file, table_name)
-        return 'Data import successful'
-    except Exception as e:
-        return f'Data import failed: {str(e)}'
-
-@app.route('/')
-def index():
-    # Example usage of the User model
-    users = User.query.all()
-    return f"Number of users: {len(users)}"
-
-with app.app_context():
-    db.create_all
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
-from flask import Flask, render_template, url_for, redirect, flash
-from flask_sqlalchemy import SQLAlchemy
+from flask import render_template, url_for, redirect, flash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, DataRequired
-from flask_bcrypt import Bcrypt
+from sqlalchemy.orm import relationship
+from sqlalchemy_serializer import SerializerMixin
+from config import app, db, bcrypt
 
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SECRET_KEY'] = 'password'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -49,16 +16,90 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-
-
 class User(db.Model, UserMixin):
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
+    firstName =  db.Column(db.String(25), nullable=False)
+    lastName = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(35), unique=True, nullable=False)
+    state = db.Column(db.String(15), nullable=False)
+    zipcode = db.Column(db.Integer, nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    payment = db.Column(db.String(35), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                           onupdate=db.func.current_timestamp())
+    def __repr__(self):
+        return f"User('{self.firstName}', '{self.lastName}', {self.email}')"
+    # relationships
+    transactions = relationship("Transaction", backref="user")
+    reviews = relationship("Review", backref="user")
 
-# db.init_app(app)
+# Review Model 
+class Review(db.Model, SerializerMixin):
+   __tablename__ = "reviews"
+   id = db.Column(db.Integer, primary_key=True)
+   rating =  db.Column (db.Integer, unique=True, nullable=False)
+   created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+   updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                          onupdate=db.func.current_timestamp())
+    #relationships
+   user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+   product_id = db.Column(db.Integer, db.ForeignKey("product_inventory.id"))
+
+   
+
+# Product Model
+class Product(db.Model, SerializerMixin):
+    __tablename__ = "product_inventory"
+    id = db.Column(db.Integer, primary_key=True)
+    main_category = db.Column(db.String(30),nullable=False)
+    title = db.Column(db.String,nullable=False)
+    avg_rating = db.Column(db.Integer,nullable=False)
+    features = db.Column(db.Text,nullable=False)
+    description = db.Column(db.Text,nullable=False)
+    store = db.Column(db.String(30),nullable=False)
+    price = db.Column(db.Float,nullable=False)
+    images = db.Column(db.String(100),nullable=False)
+    videos = db.Column (db.String(100),nullable=False)
+    categories = db.Column(db.String(100),nullable=False)
+    details = db.Column(db.Text,nullable=False)
+    parent_asin = db.Column(db.String(20),nullable=False)
+    bought_together = db.Column(db.String(20),nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                           onupdate=db.func.current_timestamp())
+
+    # relationships 
+    reviews = relationship("Review", backref="product")
+    transactions = relationship("Transaction", secondary="transaction_product_association", backref="associated_products")
+
+
+# Transaction Model
+class Transaction(db.Model, SerializerMixin):
+    __tablename__ = "transactions"
+    id = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Integer, nullable=False)
+    price =  db.Column(db.Integer,nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    payment = db.Column(db.String(25),nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), 
+                           onupdate=db.func.current_timestamp())
+
+    # relationships 
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    products = relationship("Product", secondary="transaction_product_association", backref="associated_transactions")
+
+# Association table for the many-to-many relationship between Transaction and Product
+transaction_product_association = db.Table('transaction_product_association',
+    db.Column('transaction_id', db.Integer, db.ForeignKey('transactions.id')),
+    db.Column('product_id', db.Integer, db.ForeignKey('product_inventory.id'))
+)
+
+db.init_app(app)
 
 with app.app_context():
     db.create_all()
