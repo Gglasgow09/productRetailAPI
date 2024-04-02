@@ -59,7 +59,7 @@ def logout():
     logout_user()
     return redirect(url_for('logout'))
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST', 'PATCH'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -74,7 +74,6 @@ def register():
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-        
 
 if __name__ == "__main__":
     app.run()

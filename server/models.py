@@ -6,11 +6,11 @@ from flask_login import UserMixin
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    firstName =  db.Column(db.String(25), nullable=False)
-    lastName = db.Column(db.String(25), nullable=False)
+    first_name =  db.Column(db.String(25), nullable=False)
+    last_name = db.Column(db.String(25), nullable=False)
     password = db.Column(db.String(35), unique=True, nullable=False)
     state = db.Column(db.String(15), nullable=False)
-    zipcode = db.Column(db.Integer, nullable=False)
+    zip = db.Column(db.Integer, nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     payment = db.Column(db.String(35), nullable=False)
@@ -61,7 +61,8 @@ class Product(db.Model, SerializerMixin):
 
     # relationships 
     reviews = relationship("Review", backref="product")
-    transactions = relationship("Transaction", secondary="transaction_product_association", backref="associated_products")
+    transactions = relationship("Transaction", secondary="transaction_product_association", 
+                                backref="associated_products")
 
 
 # Transaction Model
@@ -78,7 +79,8 @@ class Transaction(db.Model, SerializerMixin):
 
     # relationships 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    products = relationship("Product", secondary="transaction_product_association", backref="associated_transactions")
+    products = relationship("Product", secondary="transaction_product_association", 
+                            backref="associated_transactions")
 
 # Association table for the many-to-many relationship between Transaction and Product
 transaction_product_association = db.Table('transaction_product_association',
