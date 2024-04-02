@@ -1,25 +1,29 @@
 from flask import Flask
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
-from models import *
-from sqlalchemy import create_engine
+from models import db, User, Review, Product, Transaction
+from data_import import import_json_data
 
-
-db = SQLAlchemy()
 app = Flask(__name__)
-db_name = 'clothing_data'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///clothing_data'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db.init_app(app)
+
+@app.route('/import_data')
+def import_data():
+    json_file = 'Clothing_Data_Nine_Thousand_entries.json'
+    table_name = 'clothing_data'
+    try:
+        import_json_data(json_file, table_name)
+        return 'Data import successful'
+    except Exception as e:
+        return f'Data import failed: {str(e)}'
 
 @app.route('/')
 def index():
-    
-    engine = create_engine()
+    # Example usage of the User model
+    users = User.query.all()
+    return f"Number of users: {len(users)}"
 
-    db.query(Product).all()
-    return product.id
-
-
+with app.app_context():
+    db.create_all
 
 if __name__ == '__main__':
-    app.run(port=3306, debug=True)
+    app.run(debug=True)
