@@ -75,5 +75,42 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
+# Route to add a product to the shopping cart
+@app.route('/cart/add', methods=['POST'])
+def add_to_cart():
+    # Logic to add product to the shopping cart
+    pass
+
+# Route to process an order
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    # Logic to process the order
+    pass
+
+# Route to fetch products sorted by price
+@app.route('/products/sort/price', methods=['GET'])
+def sort_by_price():
+    # Logic to fetch products sorted by price
+    pass
+
+# Route to fetch products sorted by popularity
+@app.route('/products/sort/popularity', methods=['GET'])
+def sort_by_popularity():
+    # Logic to fetch products sorted by popularity
+    pass
+
+# Route to fetch products by category
+@app.route('/products/category/<category_name>', methods=['GET'])
+def get_products_by_category(category_name):
+    # Logic to fetch products by category
+    pass
+
+# Route for custom queries and sorts
+@app.route('/custom_query', methods=['GET'])
+def custom_query():
+    # Logic for custom queries and sorts
+    pass
+
+
 if __name__ == "__main__":
     app.run()

@@ -6,6 +6,7 @@ from flask_login import UserMixin
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25), unique=True, nullable=False)
     first_name =  db.Column(db.String(25), nullable=False)
     last_name = db.Column(db.String(25), nullable=False)
     password = db.Column(db.String(35), unique=True, nullable=False)
@@ -45,13 +46,9 @@ class Product(db.Model, SerializerMixin):
     title = db.Column(db.String,nullable=False)
     avg_rating = db.Column(db.Integer,nullable=False)
     features = db.Column(db.Text,nullable=False)
-    description = db.Column(db.Text,nullable=False)
     store = db.Column(db.String(30),nullable=False)
     price = db.Column(db.Float,nullable=False)
-    images = db.Column(db.String(100),nullable=False)
-    videos = db.Column (db.String(100),nullable=False)
     categories = db.Column(db.String(100),nullable=False)
-    details = db.Column(db.Text,nullable=False)
     parent_asin = db.Column(db.String(20),nullable=False)
     bought_together = db.Column(db.String(20),nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
