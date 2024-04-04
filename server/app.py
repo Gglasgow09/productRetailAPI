@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, request, jsonify
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -110,6 +110,53 @@ def get_products_by_category(category_name):
 def custom_query():
     # Logic for custom queries and sorts
     pass
+
+### CRUD UPDATE BELOW ###
+
+# CREATE
+@app.route('/product', methods=['POST'])
+def create_product():
+    data = request.get_json()
+    new_product = Product(name=data['name'], price=data['price'], category=data['category'])
+    db.session.add(new_product)
+    db.session.commit()
+    return jsonify({'id': new_product.id, 'name': new_product.name, 'price': new_product.price, 'category': new_product.category}), 201
+
+# READ
+@app.route('/product/<int:product_id>', methods=['GET'])
+def read_product(product_id):
+    product = Product.query.get(product_id)
+    if product:
+        return jsonify({'id': product.id, 'name': product.name, 'price': product.price, 'category': product.category})
+    return jsonify({'error': 'Product not found'}), 404
+
+# UPDATE
+@app.route('/product/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+
+    data = request.get_json()
+    product.name = data.get('name', product.name)
+    product.price = data.get('price', product.price)
+    product.category = data.get('category', product.category)
+    db.session.commit()
+    
+    return jsonify({'id': product.id, 'name': product.name, 'price': product.price, 'category': product.category})
+
+# DELETE
+@app.route('/product/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+
+    db.session.delete(product)
+    db.session.commit()
+    return jsonify({'message': 'Product deleted'}), 200
+	
+	
 
 
 if __name__ == "__main__":
