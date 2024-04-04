@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def import_json_data(json_file, table_name):
-    from app import db  # Import db here to avoid circular import
+    from app import db 
 
     df = pd.read_json(json_file)
     engine = create_engine(db.engine.url)
