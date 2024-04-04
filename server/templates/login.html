@@ -14,19 +14,22 @@
   </head>
   <body>
     {% block content %}
-      <nav>
-        <ul>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/register">Create account</a></li>
-        </ul>
-      </nav>
-      <h1>Login to your account</h1>
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      
+    {% endfor %}
+      <h1>Login to your account</h1><br/>
       <form action="#" method="post">
         {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
+        {{ form.username }}<br/>
+        {{ form.password }}<br/><br/>
         {{ form.submit }}
       </form>
+      <br/><h4>OR</h4>
+      <br/><a href="/register">Create Account</a></li>
     {% endblock %}
   </body>
 </html>

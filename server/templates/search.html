@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bowse</title>
+</head>
+<body>
+    {% block content %}
+        <h1>Browse our Selections</h1>
+        <br/>
+        <form action="#" method="POST">
+            {{ form.gender }}
+            {{ form.type }}
+            {{ form.submit }}
+        </form>
+        
+        <table class="table table-hover table-bordered table-striped">
+            <tr>
+                <th style="width:50%">Item</th>
+                <th style="width:5%">Price</th>
+                <th style="width:2%">Rating</th>
+                <th style="width:9%"></th>
+                <th style="width:7%"></th> 
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.title }}</td>  
+                <td>${{ item.price }}</td>
+                <td>{{ item.average_rating }}</td>
+                <td><a href="{{url_for('review')}}">Write a Review</a></td>
+                <td><a href="{{url_for('add')}}">Add to Cart</a></td>
+            </tr>
+            {% endfor %}
+        </table> 
+        {% endblock %}
+</body>
+</html>

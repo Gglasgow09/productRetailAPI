@@ -14,17 +14,18 @@
   </head>
   <body>
     {% block content %}
-      <nav>
-        <ul>
-          <li><a href="/login">Login</a></li>
-          <li><a href="{% block content %}/register">Create account</a></li>
-        </ul>
-      </nav>
-      <h1>Create an account</h1>
+      <h1>Create an account</h1><br/>
       <form action="#" method="post">
         {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
+        {{ form.username }}<br/>
+        {{ form.password }}<br/><br/>
+        {{ form.first_name }}<br/>
+        {{ form.last_name }}<br/><br/>
+        {{ form.email }}<br/>
+        {{ form.phone }}<br/><br/>
+        <h6>State&nbsp;&nbsp;{{ form.state }}</h6><br/>
+        {{ form.zip_code }}<br/><br/>
+        <h6>Payment&nbsp;&nbsp;{{ form.payment }}</h6><br/>
         {{ form.submit }}
       </form>
     {% endblock %}
