@@ -1,10 +1,12 @@
 from flask import Flask, render_template, url_for, redirect, flash
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin,login_user, LoginManager, login_required, logout_user
 from flask_wtf import FlaskForm
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
 from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, EmailField, validators
 from wtforms.validators import InputRequired, Length, ValidationError, DataRequired
-from flask_bcrypt import Bcrypt
+from flask_bcrypt import bcrypt
+# from config import app, db
 
 app = Flask(__name__)
 
