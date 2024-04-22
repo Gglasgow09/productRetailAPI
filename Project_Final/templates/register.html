@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration</title>
+    <style>
+      h1 {
+        color: green;
+      }
+    </style>
+  </head>
+  <body>
+    {% block content %}
+      <h1>Create an account</h1><br/>
+      <form action="#" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.username }}<br/>
+        {{ form.password }}<br/><br/>
+        {{ form.first_name }}<br/>
+        {{ form.last_name }}<br/><br/>
+        {{ form.email }}<br/>
+        {{ form.phone }}<br/><br/>
+        <h6>State&nbsp;&nbsp;{{ form.state }}</h6><br/>
+        {{ form.zip_code }}<br/><br/>
+        <h6>Payment&nbsp;&nbsp;{{ form.payment }}</h6><br/>
+        {{ form.submit }}
+      </form>
+    {% endblock %}
+  </body>
+</html>
