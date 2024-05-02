@@ -1,6 +1,5 @@
 import boto3
 
-
 s3_client = boto3.client("s3")
 dynamodb = boto3.resource("dynamodb")
 
@@ -29,3 +28,7 @@ def lambda_handler(event, context):
             )
         except Exception as e:
             print("End of file")
+
+# This Lambda function is triggered by a S3 object creation event. 
+# It reads data from an object stored in an S3 bucket, processes the data, 
+# and then inserts each row of the CSV data into a DynamoDB table named "review_table"
