@@ -1,7 +1,7 @@
 import unittest
 from flask_testing import TestCase
-from app import app, db
-from models import User
+from app import *
+
 
 class TestRegistration(TestCase):
     def create_app(self):
