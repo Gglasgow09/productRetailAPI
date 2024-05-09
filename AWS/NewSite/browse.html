@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DynamoDB Table Viewer</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            cursor: pointer; /* Add cursor style to indicate clickable header */
+        }
+    </style>
+    <script>
+        let tableData = []; // Variable to store table data
+        let sortDirections = {}; // Object to store sort direction for each column
+
+        function fetchData() {
+            fetch('https://owtjmna52l.execute-api.us-east-1.amazonaws.com/dev/browse')
+            .then(response => response.json())
+            .then(data => {
+                tableData = data; // Store fetched data in the variable
+                renderTable(tableData);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        }
+
+        function renderTable(data) {
+            const table = document.getElementById('data-table');
+            // Clear existing rows
+            table.innerHTML = '';
+            // Render table header
+            const headerRow = table.insertRow();
+            ['title', 'average_rating', 'price', 'Write a Review', 'Add to Cart'].forEach(column => {
+                const cell = headerRow.insertCell();
+                if (column === 'Write a Review' || column === 'Add to Cart') {
+                    cell.innerHTML = '<b>' + column + '</b>'; // Bold text for special columns
+                } else {
+                    cell.textContent = column.charAt(0).toUpperCase() + column.slice(1); // Capitalize column name
+                    cell.addEventListener('click', () => sortTable(column)); // Add click event listener for sorting
+                }
+            });
+            // Render table data
+            data.forEach(item => {
+                const row = table.insertRow();
+                ['title', 'average_rating', 'price', 'write_review', 'add_to_cart'].forEach(column => {
+                    const cell = row.insertCell();
+                    if (column === 'write_review') {
+                        cell.innerHTML = `<a href="new_review?title=${item['title']}">Write a Review</a>`; // Hyperlink for writing a review
+                    } else if (column === 'add_to_cart') {
+                        cell.innerHTML = `<a href="add_to_cart?${item['title']}">Add to Cart</a>`; // Hyperlink for adding to cart
+                    } else {
+                        cell.textContent = item[column];
+                    }
+                });
+            });
+        }
+
+        function filterTableByGender(gender) {
+            const filteredData = tableData.filter(item => item.gender === gender);
+            renderTable(filteredData);
+        }
+
+        function sortTable(column) {
+            if (!sortDirections[column] || sortDirections[column] === 'asc') {
+                tableData.sort((a, b) => {
+                    if (column === 'price') {
+                        return a[column] - b[column]; // Sort by price in ascending order
+                    } else if (column === 'average_rating') {
+                        return a[column] - b[column]; // Sort by average rating in ascending order
+                    }
+                });
+                sortDirections[column] = 'desc'; // Update sort direction to descending
+            } else {
+                tableData.sort((a, b) => {
+                    if (column === 'price') {
+                        return b[column] - a[column]; // Sort by price in descending order
+                    } else if (column === 'average_rating') {
+                        return b[column] - a[column]; // Sort by average rating in descending order
+                    }
+                });
+                sortDirections[column] = 'asc'; // Update sort direction to ascending
+            }
+            renderTable(tableData); // Render the table with sorted data
+        }
+
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
+    <h1>DynamoDB Table Viewer</h1>
+    <div>
+        <button onclick="sortTable('price')">Sort by Price</button>
+        <button onclick="sortTable('average_rating')">Sort by Average Rating</button>
+        &nbsp;&nbsp;<a href="#" onclick="filterTableByGender('Women')">Women</a>
+        &nbsp;&nbsp;<a href="#" onclick="filterTableByGender('Men')">Mens</a>
+        &nbsp;&nbsp;<a href="#" onclick="filterTableByGender('Boys')">Boys</a>
+        &nbsp;&nbsp;<a href="#" onclick="filterTableByGender('Girls')">Girls</a>
+    </div>
+    <table id="data-table">
+        <!-- Table rows will be populated dynamically -->
+    </table>
+</body>
+</html>

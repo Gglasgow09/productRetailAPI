@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Amazon Clothiers!</title>
+    <!-- Styling for the client UI -->
+    <style>
+    h1 {
+        color: #0a0a0a;
+        font-family: system-ui;
+		margin-left: 20px;
+        }
+    h2 {
+        color: #020101;
+        font-family: system-ui;
+        margin-left: 20px;
+    }
+	body {
+        background-color: #f7fafc;
+        }
+    label {
+        color: #0b0411;
+        font-family: system-ui;
+        font-size: 20px;
+        margin-left: 20px;
+		margin-top: 20px;
+        }
+     button {
+        background-color: #86C232;
+		border-color: #86C232;
+		color: #FFFFFF;
+        font-family: system-ui;
+        font-size: 20px;
+		font-weight: bold;
+        margin-left: 60px;
+        }
+	 input {
+        color: #0e0f0f;
+        font-family: system-ui;
+        font-size: 20px;
+        margin-left: 10px;
+		margin-top: 20px;
+		width: 100px;
+        }
+    </style>
+    <!-- <script>
+        // callAPI function that takes the base and exponent numbers as parameters
+        var callAPI = (id, password)=>{
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built in JSON utility package turn object to string and store in a variable
+            var raw = JSON.stringify({"id":id, "password":password});
+            // create a JSON object with parameters for API call and store in a variable
+            var requestOptions = {
+                method: 'GET',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            // make API call with parameters and use promises to get response
+            fetch("https://l611ztrdqh.execute-api.us-east-1.amazonaws.com/dev/login", requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+
+            window.location.href = "dashboard.html";
+        }
+    </script>
+   
+</head>
+<body>
+     -->
+
+    <!-- <h2>Welcome to Amazon Clothiers!!!</h2></br></br>
+
+    <h2>Login Form</h2>
+    <form id="loginForm">
+        <label for="id">Username:</label>
+        <input type="text" id="id" name="id"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button onclick="callAPI(document.getElementById('id').value,document.getElementById('password').value)">Login</button>
+
+    </form>
+     -->
+    <!-- <script>
+        function login() {
+        // Retrieve username and password from input fields
+            var username = document.getElementById('id').value;
+            var password = document.getElementById('password').value;
+
+            // Simulate login verification
+            if (username === "demo" && password === "password") {
+                // Store username in local storage to keep the user logged in
+                localStorage.setItem('username', username);
+                // Redirect to logged in page
+                window.location.href = 'browse.html';
+            } 
+            else {
+                alert('Invalid username or password');
+            }
+        }
+    </script> -->
+    
+<!-- 
+    <h3>OR</h3>
+    </br></br><a href="customer.html">Create New Customer</a></br><br><br>
+    <a href="browse.html">Browse Items</a>
+</body>
+</html> -->
+
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Login" onclick="login()">
+    </form>
+
+    <h3>OR</h3>
+    </br></br><a href="customer.html">Create New Customer</a></br><br><br>
+    <a href="browse.html">Browse Items</a>
+
+    <script>
+        function login() {
+            var form = document.getElementById("loginForm");
+            var formData = new FormData(form);
+
+            fetch('https://owtjmna52l.execute-api.us-east-1.amazonaws.com/dev/login', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "sucess.html";
+                } else {
+                    alert("Invalid username or password");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred, please try again later");
+                window.location.href = "sucess.html";
+            });
+        }
+    </script>
+</body>
+</html>

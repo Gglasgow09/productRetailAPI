@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Registration!</title>
+    <!-- Styling for the client UI -->
+    <style>
+    /* h1 {
+        color: #0a0a0a;
+        font-family: system-ui;
+		margin-left: 20px;
+        }
+        
+    h2 {
+        color: #0a0a0a;
+        font-family: system-ui;
+        margin-left: 20px;
+    }
+	body {
+        background-color: #fcfdfd;
+        }
+    label {
+        color: #030303;
+        font-family: system-ui;
+        font-size: 20px;
+        margin-left: 20px;
+		margin-top: 20px;
+        }
+     button {
+        background-color: #32c2af;
+		border-color: #32c2b6;
+		color: #FFFFFF;
+        font-family: system-ui;
+        font-size: 20px;
+		font-weight: bold;
+        margin-left: 30px;
+		margin-top: 20px;
+		width: 140px;
+        }
+	 input {
+        color: #b1bec7;
+        font-family: system-ui;
+        font-size: 20px;
+        margin-left: 10px;
+		margin-top: 20px;
+		width: 100px;
+        } */
+    </style>
+    <script>
+        // callAPI function that takes the base and exponent numbers as parameters
+        var callAPI = (id, password, name, phone, email, zip, payment)=>{
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built in JSON utility package turn object to string and store in a variable
+            var raw = JSON.stringify({"id":id, "password":password, "name":name, "phone":phone, "email":email, "zip":zip, "payment":payment});
+            // create a JSON object with parameters for API call and store in a variable
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            // make API call with parameters and use promises to get response
+            fetch("https://owtjmna52l.execute-api.us-east-1.amazonaws.com/dev/customer", requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+
+            window.location.href = "sucess.html";
+        }
+    </script>
+</head>
+<body>
+    <h2>Customer Registration</h2>
+    <form action="#" method="post">
+        <label for="id">Username:</label><br>
+        <input type="text" id="id" name="id" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="text" id="password" name="password" required><br><br>
+
+        <label for="name">Full Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required><br><br>
+        
+        <label for="email">Email Address:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="zip">Zip code:</label><br>
+        <input type="zip" id="zip" name="zip" required><br><br>
+        
+        <label for="payment">Payment Method:</label><br>
+        <select id="payment" name="payment" required>
+            <option value="">Select Payment Method</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+        </select><br><br>
+
+        <button type="button" onclick="callAPI(document.getElementById('id').value,document.getElementById('password').value,document.getElementById('name').value,document.getElementById('phone').value,
+                                                document.getElementById('email').value,document.getElementById('zip').value,document.getElementById('payment').value)">REGISTER</button>
+
+    </form>
+</body>
+</html>

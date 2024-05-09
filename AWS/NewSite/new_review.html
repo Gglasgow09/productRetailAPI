@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Form</title>
+</head>
+<body>
+    <h1 id="title-header"></h1>
+    <form id="review-form">
+        <label for="review">Review:</label><br>
+        <textarea id="review" name="review" rows="4" cols="50"></textarea><br>
+        <!-- Use an anchor tag for redirection -->
+        <input type="submit" value="Submit" id="submit-button">
+    </form>
+
+    <script>
+        window.onload = function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var title = urlParams.get('title');
+            document.getElementById("title-header").innerHTML = title;
+
+            document.getElementById("review-form").addEventListener("submit", function(event) {
+                event.preventDefault();
+                var reviewText = document.getElementById("review").value;
+                submitReview(title, reviewText);
+            });
+        }
+
+        function submitReview(title, review) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "https://owtjmna52l.execute-api.us-east-1.amazonaws.com/dev/review");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onload = function() {
+                console.log('Response status:', xhr.status);
+                console.log('Response text:', xhr.responseText);
+                if (xhr.status === 200) {
+                    alert("Review submitted successfully!");
+                    // Redirect to success.html after successful review submission
+                    window.location.href = "reviewsuccess.html";
+                } else {
+                    alert("Error submitting review. Please try again later.");
+                }
+            };
+
+            xhr.send(JSON.stringify({ "title": title, "review": review }));
+        }
+    </script>
+</body>
+</html>
+
